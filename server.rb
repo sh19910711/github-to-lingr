@@ -42,11 +42,16 @@ end
 
 use Rack::Session::Cookie, :secret => SESSION_SECRET
 
+# Lingrからのアクセス用
+get '/lingr' do
+    redirect '/home'
+end
+
 # Lingr hook用
 post '/lingr' do
     request.body.rewind
     request.body.read
-    return ''
+    ''
 end
 
 # リダイレクトする
@@ -61,10 +66,11 @@ get '/home' do
         collection = database.collection('users')
         user = collection.find_one(:username => session[:username])
         watched_str = user['watched'] ? '<strong>有効</strong>' : '無効'
-        return '<ul><li>監視状態: ' + watched_str + '</li><li><a href="/register">監視設定を有効にする</a></li><li><a href="/unregister">監視設定を解除する</a></li><li><a href="/logout">ログアウト</a></li></ul>'
+        @body = '<ul><li>監視状態: ' + watched_str + '</li><li><a href="/register">監視設定を有効にする</a></li><li><a href="/unregister">監視設定を解除する</a></li><li><a href="/logout">ログアウト</a></li></ul>'
     else
-        return '<a href="/login">ログイン</a>'
+        @body = '<a href="/login">ログイン</a>'
     end
+    haml :home
 end
 
 # ログイン
@@ -87,7 +93,7 @@ end
 get '/auth-callback' do
     ipaddr = request.ip
     code = params['code']
-    halt 400, "bad request" if code.to_s.empty?
+    redirect '/auth-result'if code.nil? || code.to_s.empty?
 
     url = 'https://github.com/login/oauth/access_token'
     uri = URI.parse(url)
@@ -114,10 +120,10 @@ get '/auth-callback' do
         client = Octokit::Client.new(:oauth_token => access_token)
         username = client.user.login
         token = SecureRandom.hex(253)
-        
+
         session[:username] = username
         session[:token] = token
-        
+
         # セッションを記録
         database = Database::get_database
         collection = database.collection('users')
@@ -156,6 +162,8 @@ get '/auth-result' do
         res += '失敗'
     end
     res + ', <a href="/home">ホーム</a>へ'
+    @body = res
+    haml :authresult
 end
 
 # ログアウト
@@ -175,7 +183,8 @@ get '/register' do
         }, {'$set' => {
             'watched' => true,
         }})
-        return '監視設定を有効にしました。<a href="/home">ホーム</a>へ'
+        @body = '監視設定を有効にしました。<a href="/home">ホーム</a>へ'
+        haml :register
     else
         redirect '/home'
     end
@@ -192,15 +201,32 @@ get '/unregister' do
         }, {'$set' => {
             'watched' => false,
         }})
-        return '監視設定を解除しました。<a href="/home">ホーム</a>へ'
+        @body = '監視設定を解除しました。<a href="/home">ホーム</a>へ'
+        haml :register
     else
         redirect '/home'
     end
 end
 
 def check_github_events user
-    client = Octokit::Client.new(:oauth_token => user['access_token'])
-    events = client.user_public_events(user['username'])
+    if user['access_token'].empty? || ! user['watched']
+        return
+    end
+
+    begin
+        client = Octokit::Client.new(:oauth_token => user['access_token'])
+        events = client.user_public_events(user['username'])
+    rescue
+        database = Database::get_database
+        collection = database.collection('users')
+        collection.update({
+            username: user['username']
+        }, {
+            'access_token' => '',
+            'ipaddr' => '',
+            'token' => ''
+        })
+    end
 
     all_commits = []
     table = Hash.new([])
