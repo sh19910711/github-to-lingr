@@ -161,7 +161,7 @@ get '/auth-result' do
     else
         res += '失敗'
     end
-    res + ', <a href="/home">ホーム</a>へ'
+    res += ', <a href="/home">ホーム</a>へ'
     @body = res
     haml :authresult
 end
