@@ -61,9 +61,10 @@ end
 
 # ログイン
 get '/login' do
+    scheme = ENV['https'] == 'on' ? 'https' : 'http'
     query = {
         :client_id => GITHUB_CLIENT_ID,
-        :redirect_uri => "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}/auth-callback",
+        :redirect_uri => "#{scheme}://#{env['HTTP_HOST']}/auth-callback",
         :scope => ''
     }
     
