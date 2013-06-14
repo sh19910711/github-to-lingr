@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 require 'sinatra'
+require 'rack/csrf'
 require 'net/https'
 require 'json'
 require 'octokit'
@@ -41,6 +42,7 @@ def logout
 end
 
 use Rack::Session::Cookie, :secret => SESSION_SECRET
+use Rack::Csrf, :field => 'csrf_field'
 
 # Lingrからのアクセス用
 get '/lingr' do
@@ -65,16 +67,15 @@ get '/home' do
         database = Database::get_database
         collection = database.collection('users')
         user = collection.find_one(:username => session[:username])
-        watched_str = user['watched'] ? '<strong>有効</strong>' : '無効'
-        @body = '<ul><li>監視状態: ' + watched_str + '</li><li><a href="/register">監視設定を有効にする</a></li><li><a href="/unregister">監視設定を解除する</a></li><li><a href="/logout">ログアウト</a></li></ul>'
+        @watched_str = user['watched'] ? '<strong>有効</strong>' : '無効'
+        haml :homemenu
     else
-        @body = '<a href="/login">ログイン</a>'
+        haml :home
     end
-    haml :home
 end
 
 # ログイン
-get '/login' do
+post '/login' do
     scheme = ENV['https'] == 'on' ? 'https' : 'http'
     query = {
         :client_id => GITHUB_CLIENT_ID,
@@ -167,13 +168,13 @@ get '/auth-result' do
 end
 
 # ログアウト
-get '/logout' do
+post '/logout' do
     logout
     redirect '/home'
 end
 
 # 監視登録
-get '/register' do
+post '/register' do
     if is_logged_in?
         database = Database::get_database
         collection = database.collection('users')
@@ -191,7 +192,7 @@ get '/register' do
 end
 
 # 監視解除
-get '/unregister' do
+post '/unregister' do
     if is_logged_in?
         database = Database::get_database
         collection = database.collection('users')
@@ -291,5 +292,14 @@ post '/check' do
     check_github_events(users[user_index])
     user_index = ( user_index + 1 ) % users.length
     ""
+end
+
+helpers do
+    def csrf_token
+        Rack::Csrf.csrf_token(env)
+    end
+    def csrf_tag
+        Rack::Csrf.csrf_tag(env)
+    end
 end
 
