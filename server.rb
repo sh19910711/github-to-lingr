@@ -44,6 +44,8 @@ use Rack::Session::Cookie, :secret => SESSION_SECRET
 
 # Lingr hook用
 get '/lingr' do
+    request.body.rewind
+    request.body.read
     return ''
 end
 
