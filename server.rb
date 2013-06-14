@@ -204,7 +204,7 @@ def check_github_events user
             id = event['id'].to_i
             commits = event['payload']['commits']
 
-            if id > user['last_event_id'].to_i && event['payload']['ref'] == 'refs/heads/master' && commits.length > 0
+            if id > user['last_event_id'].to_i && commits.length > 0
                 commits.each {|commit|
                     if ! table.has_key?(commit['sha'])
                         table[commit['sha']] = true
@@ -223,7 +223,7 @@ def check_github_events user
     if all_commits.length > 0
         Lingr::say "### " + user['username'] + " が " + all_commits.length.to_s + " 個コミット ###\n"
         all_commits.each {|commit_info|
-            url = 'https://github.com/' + commit_info['actor']['login'] + '/commit/' + commit_info['commit']['sha']
+            url = 'https://github.com/' + commit_info['repo']['name'] + '/commit/' + commit_info['commit']['sha']
             commit_message = "[" + commit_info['repo']['name'] + "] " + commit_info['commit']['message'] + "\n" + url + "\n"
             Lingr::say commit_message
         }
