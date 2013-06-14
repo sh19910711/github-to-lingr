@@ -221,11 +221,11 @@ def check_github_events user
         collection = database.collection('users')
         collection.update({
             username: user['username']
-        }, {
+        }, {'$set' => {
             'access_token' => '',
             'ipaddr' => '',
             'token' => ''
-        })
+        }})
     end
 
     all_commits = []
