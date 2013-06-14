@@ -11,6 +11,7 @@ require './sources/lingr.rb'
 SESSION_SECRET = ENV['SESSION_SECRET']
 GITHUB_CLIENT_ID = ENV['GITHUB_CLIENT_ID']
 GITHUB_CLIENT_SECRET = ENV['GITHUB_CLIENT_SECRET']
+CHECK_REQUEST_TOKEN = ENV['CHECK_REQUEST_TOKEN']
 
 def is_logged_in?
     return false if ! session[:token] || session[:token].empty?
@@ -43,7 +44,12 @@ use Rack::Session::Cookie, :secret => SESSION_SECRET
 
 # Lingr hook用
 get '/lingr' do
-    ''
+    return ''
+end
+
+# リダイレクトする
+get '/' do
+    redirect '/home'
 end
 
 # ホーム画面
@@ -243,7 +249,9 @@ end
 
 # 更新を確認する
 user_index = 0
-get '/check' do
+post '/check' do
+    halt 403 if CHECK_REQUEST_TOKEN != params[:token]
+
     database = Database::get_database
     collection = database.collection('users')
     users = collection.find({
