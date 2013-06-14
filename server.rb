@@ -217,6 +217,7 @@ def check_github_events user
         client = Octokit::Client.new(:oauth_token => user['access_token'])
         events = client.user_public_events(user['username'])
     rescue
+        # 失敗時はアクセストークンを削除する
         database = Database::get_database
         collection = database.collection('users')
         collection.update({
