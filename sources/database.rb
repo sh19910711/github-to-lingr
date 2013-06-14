@@ -1,6 +1,5 @@
 require 'mongo'
 require 'uri'
-require 'pp'
 
 module Database
     include Mongo

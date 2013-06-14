@@ -4,6 +4,7 @@ require 'net/https'
 require 'json'
 require 'octokit'
 require 'securerandom'
+require 'uri'
 require './sources/database.rb'
 require './sources/lingr.rb'
 
