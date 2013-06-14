@@ -42,7 +42,7 @@ def logout
 end
 
 use Rack::Session::Cookie, :secret => SESSION_SECRET
-use Rack::Csrf, :field => 'csrf_field'
+use Rack::Csrf, :field => 'csrf_field', :skip => ['POST:/check']
 
 # Lingrからのアクセス用
 get '/lingr' do
