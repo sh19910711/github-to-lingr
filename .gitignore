@@ -1,2 +1,7 @@
 env.sh
 **/.*
+
+coverage/
+tmp/
+dump/
+spec/reports/
