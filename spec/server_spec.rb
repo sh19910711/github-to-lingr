@@ -1,28 +1,55 @@
 # coding: utf-8
+ENV['RACK_ENV'] = 'test'
 require 'spec_helper.rb'
+
+require 'webmock/rspec'
+WebMock.allow_net_connect!
 
 describe 'Server' do
   include Rack::Test::Methods
 
+  # テスト用のデータベースを作成する
   before do
     database = Database::get_database
     collection = database.collection('users')
-    collection.remove({})
-    collection.insert(
+    collection.update(
       {
-        :username => 'sh19910711',
-        :token => 'hoge',
-        :ipaddr => '::1',
-        :access_token => 'fuga',
-        :watched => true,
+        'username' => 'sh19910711'
+      },
+      {
+        '$set' => {
+          'username' => 'sh19910711',
+          'token' => 'hoge',
+          'ipaddr' => '::1',
+          'access_token' => '1acc8876597a612db3b27748ae03ef75eb6ba093',
+          'watched' => true,
+          'last_event_id' => '1789831268',
+        }
       }
     );
   end
 
-  def app
-    @app ||= Sinatra::Application
+  # GitHub API: public eventsのモック
+  before do
+    response_body = File.read(File.dirname(__FILE__) + '/mock/github_api_sh19910711_public_event_result.json')
+    stub_request(:get, 'https://api.github.com/users/sh19910711/events/public').to_return(
+      {
+        :status => 200,
+        :headers => {
+          'Content-Length' => response_body.length,
+          'Content-Type' => 'application/json',
+        },
+        :body => response_body,
+      },
+    )
   end
 
+  # サーバーアプリ
+  def app
+    ServerApp
+  end
+
+  # セッションで利用するハッシュのモック
   class MyHash < Hash
     def id
       ''
@@ -32,7 +59,17 @@ describe 'Server' do
     end
   end
 
-  def set_login_stub data = {}
+  # Lingrクラスのモック
+  class FakeLingr
+    def initialize
+      # p "hello"
+    end
+    def say(message)
+      # p "fake say: #{message}"
+    end
+  end
+
+  def set_login_stub(data = {})
     # テスト用のデータベースに事前に格納しておいたデータ
     session = MyHash.new
     session[:token] = data[:token]
@@ -40,7 +77,7 @@ describe 'Server' do
     Rack::Session::Abstract::SessionHash.stub(:new).and_return(session)
   end
 
-  describe 'index' do
+  describe 'GET /' do
     context 'HTTPステータスの確認' do
       before do 
         get '/'
@@ -54,7 +91,7 @@ describe 'Server' do
     end
   end
 
-  describe 'home' do
+  describe 'GET /home' do
     context 'HTTPステータスの確認' do
       before do
         get '/home'
@@ -66,6 +103,7 @@ describe 'Server' do
         should == 200
       end
     end
+
     context 'Viewのチェック' do
       before do
         get '/home'
@@ -77,6 +115,7 @@ describe 'Server' do
         should == true
       end
     end
+
     context 'ログイン前' do
       before do
         get '/home'
@@ -86,6 +125,7 @@ describe 'Server' do
         last_response.body.include?('ログアウト').should == false
       end
     end
+
     context '不正なトークン.1' do
       before do
         # テスト用のデータベースに事前に格納しておいたデータ
@@ -97,6 +137,7 @@ describe 'Server' do
         last_response.body.include?('ログアウト').should == false
       end
     end
+
     context '不正なトークン.2' do
       before do
         # テスト用のデータベースに事前に格納しておいたデータ
@@ -108,6 +149,7 @@ describe 'Server' do
         last_response.body.include?('ログアウト').should == false
       end
     end
+
     context '不正なトークン.3' do
       before do
         # テスト用のデータベースに事前に格納しておいたデータ
@@ -119,6 +161,7 @@ describe 'Server' do
         last_response.body.include?('ログアウト').should == false
       end
     end
+
     context 'ログイン後' do
       before do
         set_login_stub :token => 'hoge', :username => 'sh19910711'
@@ -133,8 +176,8 @@ describe 'Server' do
 
   describe '/logout' do
     context 'ログアウト' do
-      before do 
-        set_login_stub :token => 'hoge', :username => 'sh19910711'
+      before do
+        set_login_stub(:token => 'hoge', :username => 'sh19910711')
         post('/logout', {}, {'REMOTE_ADDR' => '::1'})
       end
       it 'HTTP Status' do
@@ -218,6 +261,26 @@ describe 'Server' do
       it '/homeへリダイレクト' do
         last_response.status.should == 302
         last_response.original_headers['Location'].include?('/home').should == true
+      end
+    end
+  end
+
+  describe '/check' do
+    context 'GETリクエストなどでアクセスできないことを確認' do
+      before do
+        get('/check', {}, {})
+      end
+      it '404であるべき' do
+        last_response.status.should == 404
+      end
+    end
+    context '実行してみる' do
+      before do
+        Lingr.stub(:new).and_return(FakeLingr.new())
+        post('/check', {'token' => ENV['CHECK_REQUEST_TOKEN']}, {})
+      end
+      it '200であるべき' do
+        last_response.status.should == 200
       end
     end
   end

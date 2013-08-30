@@ -22,5 +22,6 @@ group :test do
   gem 'simplecov', require: false
   gem 'simplecov-rcov'
   gem 'ci_reporter'
+  gem 'webmock'
 end
 

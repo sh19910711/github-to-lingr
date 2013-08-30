@@ -12,8 +12,6 @@ Spork.prefork do
   require 'rack/csrf'
   require 'rspec'
 
-  ENV['RACK_ENV'] = 'test'
-
   def session
     last_request.env['rack.session']
   end

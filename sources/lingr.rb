@@ -4,29 +4,32 @@ require 'net/http'
 require 'json'
 
 # 環境変数: LINGR_ROOM_ID, LINGR_BOT_ID, LINGR_BOT_SECRET
-module Lingr
-    ROOM_ID = ENV['LINGR_ROOM_ID']
-    BOT_ID = ENV['LINGR_BOT_ID']
-    BOT_SECRET = ENV['LINGR_BOT_SECRET']
-    BOT_VERIFIER = Digest::SHA1.hexdigest(BOT_ID + BOT_SECRET)
-    API_URL = 'http://lingr.com/api/room/say'
-    API_URI = URI.parse(API_URL)
+class Lingr
 
-    def self.say(message)
-        request = Net::HTTP::Post.new(API_URI.request_uri, initheader = {
-            'Content-Type' => 'application/json'
-        })
-        request.body = {
-            room: ROOM_ID,
-            bot: BOT_ID,
-            text: message,
-            bot_verifier: BOT_VERIFIER
-        }.to_json
+  def initialize( room_id, bot_id, bot_secret )
+    @room_id = room_id
+    @bot_id = bot_id
+    @bot_secret = bot_secret
+    @bot_verifier = Digest::SHA1.hexdigest(@bot_id + @bot_secret)
+    @api_url = 'http://lingr.com/api/room/say'
+    @api_uri = URI.parse(@api_url)
+  end
 
-        http = Net::HTTP.new(API_URI.host, API_URI.port)
-        http.start {|http|
-            response = http.request(request)
-        }
-    end
+  def say(message)
+    request = Net::HTTP::Post.new(@api_uri.request_uri, initheader = {
+      'Content-Type' => 'application/json'
+    })
+    request.body = {
+      room: @room_id,
+      bot: @bot_id,
+      text: message,
+      bot_verifier: @bot_verifier,
+    }.to_json
+
+    http = Net::HTTP.new(@api_uri.host, @api_uri.port)
+    http.start {|http|
+      response = http.request(request)
+    }
+  end
 end
 
