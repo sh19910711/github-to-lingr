@@ -1,2 +1,2 @@
-require './server'
+require './sources/server'
 run ServerApp
