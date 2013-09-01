@@ -2,7 +2,7 @@
 require 'simplecov'
 require 'simplecov-rcov'
 
-require File.join(File.dirname(__FILE__), '..', 'server.rb')
+require File.join(File.dirname(__FILE__), '..', 'sources/server.rb')
 require 'rubygems'
 require 'spork'
 
