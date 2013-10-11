@@ -6,6 +6,10 @@ require 'simplecov-rcov'
 $:.unshift(File.expand_path(File.dirname(__FILE__) + "/lib"))
 ENV['RACK_ENV'] = 'test'
 
+# MongoDB
+require 'mongoid'
+Mongoid.load!("./mongoid.yml", ENV['RACK_ENV'].to_sym)
+
 require 'rubygems'
 require 'spork'
 

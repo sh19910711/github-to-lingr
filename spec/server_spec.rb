@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'spec_helper.rb'
+require 'server/models/user'
 require 'server/app'
 
 require 'webmock/rspec'
@@ -10,23 +11,23 @@ describe 'Server' do
 
   # テスト用のデータベースを作成する
   before do
-    database = Database::get_database
-    collection = database.collection('users')
-    collection.update(
-      {
-        'username' => 'sh19910711'
-      },
-      {
-        '$set' => {
-          'username' => 'sh19910711',
-          'token' => 'hoge',
-          'ipaddr' => '::1',
-          'access_token' => '1acc8876597a612db3b27748ae03ef75eb6ba093',
-          'watched' => true,
-          'last_event_id' => '1789831268',
-        }
-      }
-    );
+    Server::Models::User
+    .find_or_create_by(
+      :username => 'sh19910711',
+    )
+
+    Server::Models::User
+    .where(
+      :username => 'sh19910711',
+    )
+    .update({
+      :username      => 'sh19910711',
+      :token         => 'hoge',
+      :ipaddr        => '::1',
+      :access_token  => '1acc8876597a612db3b27748ae03ef75eb6ba093',
+      :watched       => true,
+      :last_event_id => '1789831268',
+    })
   end
 
   # GitHub API: public eventsのモック
@@ -46,7 +47,7 @@ describe 'Server' do
 
   # サーバーアプリ
   def app
-    ServerApp
+    Server::App
   end
 
   # セッションで利用するハッシュのモック
@@ -75,6 +76,13 @@ describe 'Server' do
     session[:token] = data[:token]
     session[:username] = data[:username]
     Rack::Session::Abstract::SessionHash.stub(:new).and_return(session)
+  end
+
+  def where_user_first
+    ret = Server::Models::User.where(
+      :username => 'sh19910711'
+    )
+    ret.first
   end
 
   describe 'GET /' do
@@ -184,11 +192,7 @@ describe 'Server' do
         last_response.status.should == 302
       end
       it 'ユーザーのIPアドレスとトークンの初期化が行われているか' do
-        database = Database::get_database
-        collection = database.collection('users')
-        user = collection.find_one({
-          :username => 'sh19910711'
-        })
+        user = where_user_first
         user['ipaddr'].should == ''
         user['token'].should == ''
       end
@@ -202,11 +206,7 @@ describe 'Server' do
         post('/register', {}, {'REMOTE_ADDR' => '::1'})
       end
       it '監視設定が有効化されているか' do
-        database = Database::get_database
-        collection = database.collection('users')
-        user = collection.find_one({
-          :username => 'sh19910711'
-        })
+        user = where_user_first
         user['watched'].should == true
       end
     end
@@ -237,11 +237,7 @@ describe 'Server' do
         post('/unregister', {}, {'REMOTE_ADDR' => '::1'})
       end
       it '監視設定が無効化されているか' do
-        database = Database::get_database
-        collection = database.collection('users')
-        user = collection.find_one({
-          :username => 'sh19910711'
-        })
+        user = where_user_first
         user['watched'].should == false
       end
     end
@@ -276,7 +272,7 @@ describe 'Server' do
     end
     context '実行してみる' do
       before do
-        Lingr.stub(:new).and_return(FakeLingr.new())
+        Server::Lingr.stub(:new).and_return(FakeLingr.new())
         post('/check', {'token' => ENV['CHECK_REQUEST_TOKEN']}, {})
       end
       it '200であるべき' do
