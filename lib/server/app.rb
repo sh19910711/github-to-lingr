@@ -56,7 +56,7 @@ module Server
     use Rack::Session::Cookie, :secret => SESSION_SECRET
 
     configure :production, :development do
-      use Rack::Csrf, :field => 'csrf_field', :skip => ['POST:/check']
+      use Rack::Csrf, :field => 'csrf_field', :skip => ['POST:/check', 'POST:/lingr']
     end
 
     # Lingrからのアクセス用
