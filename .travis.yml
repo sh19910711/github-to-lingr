@@ -4,9 +4,10 @@ services:
 rvm:
   - 2.0.0
 before_script:
+  - mongo github-to-lingr-test-db --eval 'db.addUser("travis", "test");'
 bundler_args:
 script:
-  - export MONGOHQ_URL=mongodb://localhost:27017/github-to-lingr-test-db
+  - export MONGOHQ_URL=mongodb://test:test@localhost:27017/github-to-lingr-test-db
   - bundle install
   - bundle exec rake spec
 gemfile:
