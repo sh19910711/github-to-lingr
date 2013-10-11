@@ -11,6 +11,7 @@ require 'time'
 require 'haml'
 
 require 'server/models/user'
+require 'server/models/cache'
 require 'server/lingr'
 
 module Server
@@ -25,7 +26,7 @@ module Server
   class App < Sinatra::Base
     def is_logged_in?
       return false if ! session[:token] || session[:token].empty?
-      userinfo = Models::User.where(:username => session[:username]).first
+      userinfo = Models::User.where(:username => session[:username]).cache.first
       # ログインチェック
       if userinfo.nil? || ( userinfo['ipaddr'] == '' || request.ip != userinfo['ipaddr'] ) || ( userinfo['token'] == '' || session[:token] != userinfo['token'] )
         session.clear
@@ -78,7 +79,8 @@ module Server
     # ホーム画面
     get '/home' do
       if is_logged_in?
-        user = Server::Models::User.where(:username => session[:username]).first
+        users = Server::Models::User.where(:username => session[:username]).cache
+        user = users.first
         @watched_str = user['watched'] ? '<strong>有効</strong>' : '無効'
         haml :homemenu
       else
@@ -222,7 +224,10 @@ module Server
 
           if id > user_last_event_id && commits.length > 0
             commits.reverse.each {|commit|
-              if ! table.has_key?(commit['sha'])
+              cache = Server::Models::Cache.where(:commit_id => commit['sha'])
+              cache.cache
+              if ! cache.exists? && ! table.has_key?(commit['sha'])
+                cache.create
                 table[commit['sha']] = true
                 all_commits.push({
                   'actor'  => actor,
@@ -300,7 +305,7 @@ module Server
 
       Server::Models::User.where({
         :username => user['username'],
-      }).update({
+      }).cache.update({
           'last_event_id' => last_event_id,
         })
 
@@ -314,7 +319,7 @@ module Server
 
       users = Server::Models::User.where({
         :watched => true
-      }).to_a
+      }).cache.to_a
       return "" if users.empty?
       user_index %= users.length
       check_github_events(users[user_index])

@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'spec_helper.rb'
 require 'server/models/user'
+require 'server/models/cache'
 require 'server/app'
 
 require 'webmock/rspec'
@@ -29,9 +30,14 @@ describe 'Server' do
     })
   end
 
+  def reset_cache
+    Server::Models::Cache.all.delete
+  end
+
   # テスト用のデータベースを作成する
   before do
     reset_user
+    reset_cache
   end
 
   # GitHub API: public eventsのモック
