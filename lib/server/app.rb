@@ -125,7 +125,7 @@ module Server
             :client_id => GITHUB_CLIENT_ID,
             :client_secret => GITHUB_CLIENT_SECRET,
             :code => code
-          }.to_json 
+          }.to_json
           response = http.request(request)
         end
 
@@ -138,10 +138,11 @@ module Server
 
         session[:username] = username
         session[:token] = token
+        p session
 
         # セッションを記録
         user = Server::Models::User.where(:username => username)
-        if user
+        if user.count > 0
           user.update(
             :token        => token,
             :ipaddr       => ipaddr,
@@ -150,7 +151,7 @@ module Server
         else
           last_event_id = client.user_public_events(username)[0]['id']
           # 新規ユーザー
-          user.update(
+          user.create(
             :username      => username,
             :token         => token,
             :ipaddr        => ipaddr,
