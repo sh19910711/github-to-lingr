@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+  - 2.0.0
+before_script:
+bundler_args:
+script:
+  - bundle install
+  - source tmp/setenv.sh
+  - bundle exec rake spec
+gemfile:
+  - Gemfile
