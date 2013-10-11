@@ -1,18 +1,23 @@
 source 'https://rubygems.org'
 
-ruby '1.9.3'
+ruby '2.0.0'
 
-gem 'sinatra'
-gem 'sinatra-contrib'
-gem 'haml'
-gem 'octokit'
-gem 'mongo'
-gem 'bson_ext'
-gem 'rack_csrf'
+group :production, :development do
+  gem 'sinatra'
+  gem 'sinatra-contrib'
+  gem 'haml'
+  gem 'octokit'
+  gem 'mongoid', '~> 3.0.0'
+  gem 'mongo_ext'
+  gem 'bson_ext'
+  gem 'rack_csrf'
+end
 
 group :development do
   gem 'rake'
-  gem 'sinatra-reloader', require: 'sinatra/reloader'
+  gem 'shotgun'
+  gem 'byebug'
+  gem 'pry'
 end
 
 group :test do
