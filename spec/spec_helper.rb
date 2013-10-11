@@ -2,7 +2,10 @@
 require 'simplecov'
 require 'simplecov-rcov'
 
-require File.join(File.dirname(__FILE__), '..', 'sources/server.rb')
+# Load Path
+$:.unshift(File.expand_path(File.dirname(__FILE__) + "/lib"))
+ENV['RACK_ENV'] = 'test'
+
 require 'rubygems'
 require 'spork'
 

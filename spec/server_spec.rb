@@ -1,6 +1,6 @@
 # coding: utf-8
-ENV['RACK_ENV'] = 'test'
 require 'spec_helper.rb'
+require 'server/app'
 
 require 'webmock/rspec'
 WebMock.allow_net_connect!

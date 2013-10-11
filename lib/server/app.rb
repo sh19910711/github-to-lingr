@@ -7,12 +7,9 @@ require 'octokit'
 require 'securerandom'
 require 'uri'
 require 'time'
-require './sources/database.rb'
-require './sources/lingr.rb'
 
-if ENV['RACK_ENV'] == "development"
-  require 'sinatra/reloader'
-end
+require 'server/database'
+require 'server/lingr'
 
 SESSION_SECRET       = ENV['SESSION_SECRET']
 GITHUB_CLIENT_ID     = ENV['GITHUB_CLIENT_ID']
@@ -27,10 +24,6 @@ def uri_encode(s)
 end
 
 class ServerApp < Sinatra::Base
-  configure :development do
-    register Sinatra::Reloader
-  end
-
   def is_logged_in?
     return false if ! session[:token] || session[:token].empty?
     database = Database::get_database
