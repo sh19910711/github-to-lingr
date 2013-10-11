@@ -26,7 +26,7 @@ module Server
   class App < Sinatra::Base
     def is_logged_in?
       return false if ! session[:token] || session[:token].empty?
-      userinfo = Models::User.where(:username => session[:username]).cache.first
+      userinfo = Models::User.where(:username => session[:username]).first
       # ログインチェック
       if userinfo.nil? || ( userinfo['ipaddr'] == '' || request.ip != userinfo['ipaddr'] ) || ( userinfo['token'] == '' || session[:token] != userinfo['token'] )
         session.clear
