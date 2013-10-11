@@ -279,6 +279,30 @@ describe 'Server' do
         last_response.status.should == 200
       end
     end
+    context '実行回数の計測' do
+      before do
+        # Lingrクラスのモック
+        class FakeLingr
+          def initialize
+            @@cnt = 0
+          end
+          def say(message)
+            @@cnt += 1 if /^\[/.match message
+          end
+          def self.get_cnt
+            @@cnt
+          end
+        end
+      end
+      before do
+        Server::Lingr.stub(:new).and_return(FakeLingr.new())
+        post('/check', {'token' => ENV['CHECK_REQUEST_TOKEN']}, {})
+      end
+      it '200' do
+        last_response.status.should == 200
+        FakeLingr.get_cnt.should eq 27
+      end
+    end
   end
 
 end
