@@ -8,7 +8,7 @@ require 'securerandom'
 require 'uri'
 require 'time'
 
-require 'server/database'
+require 'server/models/user'
 require 'server/lingr'
 
 SESSION_SECRET       = ENV['SESSION_SECRET']

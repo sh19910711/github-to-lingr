@@ -7,7 +7,8 @@ group :production, :development do
   gem 'sinatra-contrib'
   gem 'haml'
   gem 'octokit'
-  gem 'mongo'
+  gem 'mongoid', '~> 3.0.0'
+  gem 'mongo_ext'
   gem 'bson_ext'
   gem 'rack_csrf'
 end
