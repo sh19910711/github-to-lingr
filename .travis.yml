@@ -1,11 +1,13 @@
 language: ruby
+services:
+  - mongodb
 rvm:
   - 2.0.0
 before_script:
 bundler_args:
 script:
+  - export MONGOHQ_URL=mongodb://localhost:27017/github-to-lingr-test-db
   - bundle install
-  - source tmp/setenv.sh
   - bundle exec rake spec
 gemfile:
   - Gemfile
