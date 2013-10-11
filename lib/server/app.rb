@@ -26,7 +26,7 @@ module Server
   class App < Sinatra::Base
     def is_logged_in?
       return false if ! session[:token] || session[:token].empty?
-      userinfo = Models::User.where(:username => session[:username]).first
+      userinfo = Models::User.where(:username => session[:username]).cache.first
       # ログインチェック
       if userinfo.nil? || ( userinfo['ipaddr'] == '' || request.ip != userinfo['ipaddr'] ) || ( userinfo['token'] == '' || session[:token] != userinfo['token'] )
         session.clear
@@ -321,11 +321,11 @@ module Server
       users = Server::Models::User.where({
         :watched => true
       }).cache.to_a
-      return "" if users.empty?
+      return "empty" if users.empty?
       user_index %= users.length
       check_github_events(users[user_index])
       user_index = ( user_index + 1 ) % users.length
-      ""
+      "ok"
     end
 
     configure :development do
