@@ -305,7 +305,7 @@ module Server
 
       Server::Models::User.where({
         :username => user['username'],
-      }).cache.update({
+      }).update({
           'last_event_id' => last_event_id,
         })
 
