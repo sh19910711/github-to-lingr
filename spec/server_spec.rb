@@ -9,8 +9,7 @@ WebMock.allow_net_connect!
 describe 'Server' do
   include Rack::Test::Methods
 
-  # テスト用のデータベースを作成する
-  before do
+  def reset_user
     Server::Models::User
     .find_or_create_by(
       :username => 'sh19910711',
@@ -28,6 +27,11 @@ describe 'Server' do
       :watched       => true,
       :last_event_id => '1789831268',
     })
+  end
+
+  # テスト用のデータベースを作成する
+  before do
+    reset_user
   end
 
   # GitHub API: public eventsのモック
@@ -301,6 +305,33 @@ describe 'Server' do
       it '200' do
         last_response.status.should == 200
         FakeLingr.get_cnt.should eq 27
+      end
+    end
+    context '二度目は無いということ' do
+      before do
+        # Lingrクラスのモック
+        class FakeLingr
+          def initialize
+            @@cnt = 0
+          end
+          def say(message)
+            @@cnt += 1 if /^\[/.match message
+          end
+          def self.get_cnt
+            @@cnt
+          end
+        end
+      end
+      before do
+        Server::Lingr.stub(:new).and_return(FakeLingr.new())
+        post('/check', {'token' => ENV['CHECK_REQUEST_TOKEN']}, {})
+        Server::Lingr.stub(:new).and_return(FakeLingr.new())
+        reset_user
+        post('/check', {'token' => ENV['CHECK_REQUEST_TOKEN']}, {})
+      end
+      it '200' do
+        last_response.status.should == 200
+        FakeLingr.get_cnt.should eq 0
       end
     end
   end
