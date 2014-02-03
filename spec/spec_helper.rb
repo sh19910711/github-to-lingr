@@ -4,10 +4,10 @@ require 'simplecov-rcov'
 
 # Load Path
 $:.unshift(File.expand_path(File.dirname(__FILE__) + "/lib"))
-ENV['RACK_ENV'] = 'test'
-ENV['MONGODB_URL'] = 'mongodb://localhost:27017/lingrbot-github-to-lingr-test'
+ENV['RACK_ENV']            = 'test'
+ENV['MONGODB_URL']         = ENV['MONGODB_URL'] || 'mongodb://localhost:27017/lingrbot-github-to-lingr-test'
 ENV['CHECK_REQUEST_TOKEN'] = 'this is test'
-ENV['SESSION_SECRET'] = 'this is test'
+ENV['SESSION_SECRET']      = 'this is test'
 
 # MongoDB
 require 'mongoid'
