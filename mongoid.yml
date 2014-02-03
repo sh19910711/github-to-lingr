@@ -21,8 +21,10 @@ test:
   sessions:
     default:
       database: <%= uri.path.sub('/','') %>
+      <% if uri.user %>
       username: <%= uri.user %>
       password: <%= uri.password %>
+      <% end %>
       hosts:
         - <%= uri.host %>:<%= uri.port %>
 <% end %>
