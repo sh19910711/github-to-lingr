@@ -5,10 +5,24 @@ require 'simplecov-rcov'
 # Load Path
 $:.unshift(File.expand_path(File.dirname(__FILE__) + "/lib"))
 ENV['RACK_ENV'] = 'test'
+ENV['MONGODB_URL'] = 'mongodb://localhost:27017/lingrbot-github-to-lingr-test'
+ENV['CHECK_REQUEST_TOKEN'] = 'this is test'
+ENV['SESSION_SECRET'] = 'this is test'
 
 # MongoDB
 require 'mongoid'
 Mongoid.load!("./mongoid.yml", ENV['RACK_ENV'].to_sym)
+
+require 'webmock'
+WebMock.disable_net_connect!
+
+=begin
+require 'fakefs/safe'
+require 'fakefs/spec_helpers'
+RSpec.configure do |config|
+  config.include FakeFS::SpecHelpers
+end
+=end
 
 require 'rubygems'
 require 'spork'
