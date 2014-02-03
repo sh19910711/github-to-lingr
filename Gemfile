@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.0.0'
+ruby '2.1.0'
 
 group :production, :development do
   gem 'sinatra'
@@ -28,5 +28,6 @@ group :test do
   gem 'simplecov-rcov'
   gem 'ci_reporter'
   gem 'webmock'
+  gem 'fakefs'
 end
 

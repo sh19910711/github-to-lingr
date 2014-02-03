@@ -4,9 +4,6 @@ require 'server/models/user'
 require 'server/models/cache'
 require 'server/app'
 
-require 'webmock/rspec'
-WebMock.allow_net_connect!
-
 describe 'Server' do
   include Rack::Test::Methods
 
@@ -43,7 +40,7 @@ describe 'Server' do
   # GitHub API: public eventsのモック
   before do
     response_body = File.read(File.dirname(__FILE__) + '/mock/github_api_sh19910711_public_event_result.json')
-    stub_request(:get, 'https://api.github.com/users/sh19910711/events/public').to_return(
+    WebMock.stub_request(:get, 'https://api.github.com/users/sh19910711/events/public').to_return(
       {
         :status => 200,
         :headers => {
