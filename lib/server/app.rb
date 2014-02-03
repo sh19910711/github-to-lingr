@@ -138,7 +138,6 @@ module Server
 
         session[:username] = username
         session[:token] = token
-        p session
 
         # セッションを記録
         user = Server::Models::User.where(:username => username)
