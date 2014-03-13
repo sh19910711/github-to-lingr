@@ -1,4 +1,10 @@
 language: ruby
+branches:
+  only:
+    - master
+    - develop
+    - heroku/production
+    - heroku/development
 services:
   - mongodb
 rvm:
