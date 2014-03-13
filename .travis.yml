@@ -16,23 +16,17 @@ script:
   - export MONGODB_URL=mongodb://test:test@localhost:27017/lingrbot-github-to-lingr-test
   - bundle install
   - bundle exec rake spec
-after_success:
-  - if [ "${TRAVIS_PULL_REQUEST}" == false ] && [ "${TRAVIS_BRANCH}" == "heroku/production" ]; then bash scripts/travis/after_success.sh ${HEROKU_APP_ID_PRODUCTION} ; fi
-  - if [ "${TRAVIS_PULL_REQUEST}" == false ] && [ "${TRAVIS_BRANCH}" == "heroku/development" ]; then bash scripts/travis/after_success.sh ${HEROKU_APP_ID_DEVELOPMENT} ; fi
 gemfile:
   - Gemfile
-env:
-  global:
-    - secure: "cz/XakXwNuSsvGkVhV14g8RwOkvNG4ohncFM7cycEYTiCasmMjfEMxoy/i6iFPBim96RWXA2EF0KRIdbA4SVn5FCdcw2A4Rs7WZ34+6KqQCUiHW1/hRbwYn9cD5rN38h3hSod28QPqXlEG38Fr362W5tk+iF9ntPcfFb9wuwU7Q="
-    - secure: "AL7IxoLSK45BGadDKESUHqPpSySOSrOm9sjUFdvoakd2qzEBaV/6hvzGmEjXopI6HGtjR31oukyXCX3pHNvU93Iw+fW0+PDduEqEr+OrD0HpTnIacbg5Aik0H39ThRqA4qhPWRYcb0+8XqvRy9nCJqKl3MEJdPVbip4ibueqBY8="
-    - secure: "HnOnva9cxR60OQsQ963/+Wc78kWU8P6b5ssaXLUEZD5TY88wIuGi/TyKh9/62tH9FtAFlsAOcVmXWIFfKOQUq6pvfdXGup3k25/S5IuCjehYXg3gF1nhCawdGuvrrZKL+PE5w6wILsSfD9n56ELrD/zw0XgdPduMkSSWRq8hnm0="
 deploy:
-  provider: heroku
-  api_key:
-    secure: "Org0wg805+PPwdseZXee8umOCiQwyVwHz/0cl1V7qkx8oNqNX7e7CHlXb5WrEB8RozGhoUHVHM7bupyDGyA+4mqUcngoNVdsGyS0VrQ553zKKFySspWiW4l07HamfBZ6G3CZeJfC+El9frD1DyWh0P4q7DsNaC1BMigetfPKn7A="
-  app:
-    heroku/production:
-      secure: "MEojp0bR2I9msoCfmqYGJ75pgOxKaEYsW6X4iLDDsBne6+hq01Yra1KsYznEl985FCDRsgEFGwGpdBQazceyyyZJqTOrX+8Ip3Y15DfDq9YS2i+kcHrd68m+4dfW6kJ+HFklnnW75gGPYGkaOjeP1lhqLh5x0JUuM/BaRYa30G4="
-    heroku/development:
-      secure: "L5TZBsB8whor5zxkxzpKWuBGPOjf39NDqxlTOnyrWVpP1rWgqS+ymYX61r+OU6p9w+YG8jPpWoYZtsYBf9Xb4OCt5BaPjMpjHds0uDQqt7QgJ6JJdfugLboiYLUD4RJPGY0FsbLeYNUocJ2dJGoz8A7CTAILjgJu9jM/OjFoBsU="
+  - provider: heroku
+    api_key:
+      secure: "Org0wg805+PPwdseZXee8umOCiQwyVwHz/0cl1V7qkx8oNqNX7e7CHlXb5WrEB8RozGhoUHVHM7bupyDGyA+4mqUcngoNVdsGyS0VrQ553zKKFySspWiW4l07HamfBZ6G3CZeJfC+El9frD1DyWh0P4q7DsNaC1BMigetfPKn7A="
+    run:
+      - heroku config:set GITHUB_TO_LINGR_VERSION=${TRAVIS_COMMIT}
+    app:
+      heroku/production:
+        secure: "MEojp0bR2I9msoCfmqYGJ75pgOxKaEYsW6X4iLDDsBne6+hq01Yra1KsYznEl985FCDRsgEFGwGpdBQazceyyyZJqTOrX+8Ip3Y15DfDq9YS2i+kcHrd68m+4dfW6kJ+HFklnnW75gGPYGkaOjeP1lhqLh5x0JUuM/BaRYa30G4="
+      heroku/development:
+        secure: "L5TZBsB8whor5zxkxzpKWuBGPOjf39NDqxlTOnyrWVpP1rWgqS+ymYX61r+OU6p9w+YG8jPpWoYZtsYBf9Xb4OCt5BaPjMpjHds0uDQqt7QgJ6JJdfugLboiYLUD4RJPGY0FsbLeYNUocJ2dJGoz8A7CTAILjgJu9jM/OjFoBsU="
 
