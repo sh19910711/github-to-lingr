@@ -11,7 +11,7 @@ script:
   - bundle install
   - bundle exec rake spec
 after_success:
-  - sh scripts/travis/after_success.sh
+  - bash scripts/travis/after_success.sh
 gemfile:
   - Gemfile
 global:
