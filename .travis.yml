@@ -25,6 +25,7 @@ env:
   global:
     secure: "cz/XakXwNuSsvGkVhV14g8RwOkvNG4ohncFM7cycEYTiCasmMjfEMxoy/i6iFPBim96RWXA2EF0KRIdbA4SVn5FCdcw2A4Rs7WZ34+6KqQCUiHW1/hRbwYn9cD5rN38h3hSod28QPqXlEG38Fr362W5tk+iF9ntPcfFb9wuwU7Q="
     secure: "AL7IxoLSK45BGadDKESUHqPpSySOSrOm9sjUFdvoakd2qzEBaV/6hvzGmEjXopI6HGtjR31oukyXCX3pHNvU93Iw+fW0+PDduEqEr+OrD0HpTnIacbg5Aik0H39ThRqA4qhPWRYcb0+8XqvRy9nCJqKl3MEJdPVbip4ibueqBY8="
+    secure: "HnOnva9cxR60OQsQ963/+Wc78kWU8P6b5ssaXLUEZD5TY88wIuGi/TyKh9/62tH9FtAFlsAOcVmXWIFfKOQUq6pvfdXGup3k25/S5IuCjehYXg3gF1nhCawdGuvrrZKL+PE5w6wILsSfD9n56ELrD/zw0XgdPduMkSSWRq8hnm0="
 deploy:
   provider: heroku
   api_key:
