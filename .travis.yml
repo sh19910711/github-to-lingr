@@ -10,8 +10,23 @@ script:
   - export MONGODB_URL=mongodb://test:test@localhost:27017/lingrbot-github-to-lingr-test
   - bundle install
   - bundle exec rake spec
+after_success:
+  - if [ "${TRAVIS_BRANCH}" == "heroku/production" ] || [ "${TRAVIS_BRANCH}" == "heroku/development" ]; then \
+      wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh ; \
+      if [ "${TRAVIS_BRANCH}" == "heroku/production" ]; then git remote add heroku git@heroku.com:${HEROKU_APP_ID_PRODUCTION}.git ; fi ; \
+      if [ "${TRAVIS_BRANCH}" == "heroku/development" ]; then git remote add heroku git@heroku.com:${HEROKU_APP_ID_DEVELOPMENT}.git ; fi ; \
+      echo "Host heroku.com" >> ~/.ssh/config ; \
+      echo "   StrictHostKeyChecking no" >> ~/.ssh/config ; \
+      echo "   CheckHostIP no" >> ~/.ssh/config ; \
+      echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config ; \
+      heroku config:set GITHUB_TO_LINGR_VERSION=`git rev-parse ${TRAVIS_BRANCH}` ; \
+    fi
 gemfile:
   - Gemfile
+global:
+  env:
+    secure: "cz/XakXwNuSsvGkVhV14g8RwOkvNG4ohncFM7cycEYTiCasmMjfEMxoy/i6iFPBim96RWXA2EF0KRIdbA4SVn5FCdcw2A4Rs7WZ34+6KqQCUiHW1/hRbwYn9cD5rN38h3hSod28QPqXlEG38Fr362W5tk+iF9ntPcfFb9wuwU7Q="
+    secure: "AL7IxoLSK45BGadDKESUHqPpSySOSrOm9sjUFdvoakd2qzEBaV/6hvzGmEjXopI6HGtjR31oukyXCX3pHNvU93Iw+fW0+PDduEqEr+OrD0HpTnIacbg5Aik0H39ThRqA4qhPWRYcb0+8XqvRy9nCJqKl3MEJdPVbip4ibueqBY8="
 deploy:
   provider: heroku
   api_key:
