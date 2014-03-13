@@ -76,6 +76,10 @@ module Server
       redirect '/home'
     end
 
+    get '/version' do
+      ENV['GITHUB_TO_LINGR_VERSION']
+    end
+
     # ホーム画面
     get '/home' do
       if is_logged_in?
