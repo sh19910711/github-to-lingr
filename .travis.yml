@@ -19,7 +19,7 @@ script:
 gemfile:
   - Gemfile
 deploy:
-- provider: heroku
+  provider: heroku
   api_key:
     secure: "Org0wg805+PPwdseZXee8umOCiQwyVwHz/0cl1V7qkx8oNqNX7e7CHlXb5WrEB8RozGhoUHVHM7bupyDGyA+4mqUcngoNVdsGyS0VrQ553zKKFySspWiW4l07HamfBZ6G3CZeJfC+El9frD1DyWh0P4q7DsNaC1BMigetfPKn7A="
   run:
