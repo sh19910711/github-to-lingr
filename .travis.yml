@@ -18,12 +18,8 @@ script:
   - bundle exec rake spec
 after_success:
   - 
-    if [ "${TRAVIS_PULL_REQUEST}" == false" && "${TRAVIS_BRANCH}" == "heroku/production"  ]; then \
-      bash scripts/travis/after_success.sh ${HEROKU_APP_ID_PRODUCTION} ; \
-    fi ; \
-    if [ "${TRAVIS_PULL_REQUEST}" == false" && "${TRAVIS_BRANCH}" == "heroku/development"  ]; then \
-      bash scripts/travis/after_success.sh ${HEROKU_APP_ID_DEVELOPMENT} ; \
-    fi
+    if [ "${TRAVIS_PULL_REQUEST}" == false && "${TRAVIS_BRANCH}" == "heroku/production"  ]; then bash scripts/travis/after_success.sh ${HEROKU_APP_ID_PRODUCTION} ; fi
+    if [ "${TRAVIS_PULL_REQUEST}" == false && "${TRAVIS_BRANCH}" == "heroku/development"  ]; then bash scripts/travis/after_success.sh ${HEROKU_APP_ID_DEVELOPMENT} ; fi
 gemfile:
   - Gemfile
 global:
