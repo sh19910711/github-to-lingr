@@ -19,14 +19,14 @@ script:
 gemfile:
   - Gemfile
 deploy:
-  - provider: heroku
-    api_key:
-      secure: "Org0wg805+PPwdseZXee8umOCiQwyVwHz/0cl1V7qkx8oNqNX7e7CHlXb5WrEB8RozGhoUHVHM7bupyDGyA+4mqUcngoNVdsGyS0VrQ553zKKFySspWiW4l07HamfBZ6G3CZeJfC+El9frD1DyWh0P4q7DsNaC1BMigetfPKn7A="
-    run:
-      - heroku config:set GITHUB_TO_LINGR_VERSION=${TRAVIS_COMMIT}
-    app:
-      heroku/production:
-        secure: "MEojp0bR2I9msoCfmqYGJ75pgOxKaEYsW6X4iLDDsBne6+hq01Yra1KsYznEl985FCDRsgEFGwGpdBQazceyyyZJqTOrX+8Ip3Y15DfDq9YS2i+kcHrd68m+4dfW6kJ+HFklnnW75gGPYGkaOjeP1lhqLh5x0JUuM/BaRYa30G4="
-      heroku/development:
-        secure: "L5TZBsB8whor5zxkxzpKWuBGPOjf39NDqxlTOnyrWVpP1rWgqS+ymYX61r+OU6p9w+YG8jPpWoYZtsYBf9Xb4OCt5BaPjMpjHds0uDQqt7QgJ6JJdfugLboiYLUD4RJPGY0FsbLeYNUocJ2dJGoz8A7CTAILjgJu9jM/OjFoBsU="
+- provider: heroku
+  api_key:
+    secure: "Org0wg805+PPwdseZXee8umOCiQwyVwHz/0cl1V7qkx8oNqNX7e7CHlXb5WrEB8RozGhoUHVHM7bupyDGyA+4mqUcngoNVdsGyS0VrQ553zKKFySspWiW4l07HamfBZ6G3CZeJfC+El9frD1DyWh0P4q7DsNaC1BMigetfPKn7A="
+  run:
+    - heroku config:set GITHUB_TO_LINGR_VERSION=${TRAVIS_COMMIT}
+  app:
+    heroku/production:
+      secure: "MEojp0bR2I9msoCfmqYGJ75pgOxKaEYsW6X4iLDDsBne6+hq01Yra1KsYznEl985FCDRsgEFGwGpdBQazceyyyZJqTOrX+8Ip3Y15DfDq9YS2i+kcHrd68m+4dfW6kJ+HFklnnW75gGPYGkaOjeP1lhqLh5x0JUuM/BaRYa30G4="
+    heroku/development:
+      secure: "L5TZBsB8whor5zxkxzpKWuBGPOjf39NDqxlTOnyrWVpP1rWgqS+ymYX61r+OU6p9w+YG8jPpWoYZtsYBf9Xb4OCt5BaPjMpjHds0uDQqt7QgJ6JJdfugLboiYLUD4RJPGY0FsbLeYNUocJ2dJGoz8A7CTAILjgJu9jM/OjFoBsU="
 
