@@ -1,4 +1,10 @@
 language: ruby
+branches:
+  only:
+    - master
+    - develop
+    - heroku/production
+    - heroku/development
 services:
   - mongodb
 rvm:
@@ -11,7 +17,8 @@ script:
   - bundle install
   - bundle exec rake spec
 after_success:
-  - bash scripts/travis/after_success.sh
+  - if [ "${TRAVIS_PULL_REQUEST}" == false ] && [ "${TRAVIS_BRANCH}" == "heroku/production" ]; then bash scripts/travis/after_success.sh ${HEROKU_APP_ID_PRODUCTION} ; fi
+  - if [ "${TRAVIS_PULL_REQUEST}" == false ] && [ "${TRAVIS_BRANCH}" == "heroku/development" ]; then bash scripts/travis/after_success.sh ${HEROKU_APP_ID_DEVELOPMENT} ; fi
 gemfile:
   - Gemfile
 global:
