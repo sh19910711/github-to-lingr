@@ -2,12 +2,7 @@
 
 if [[ "${TRAVIS_PULL_REQUEST}" == false ]] && [[ "${TRAVIS_BRANCH}" == "heroku/production" || "${TRAVIS_BRANCH}" == "heroku/development" ]]; then
   wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-  if [ "${TRAVIS_BRANCH}" == "heroku/production"  ]; then
-    export HEROKU_APP_ID=${HEROKU_APP_ID_PRODUCTION}
-  fi
-  if [ "${TRAVIS_BRANCH}" == "heroku/development"  ]; then
-    export HEROKU_APP_ID=${HEROKU_APP_ID_DEVELOPMENT}
-  fi
+  export HEROKU_APP_ID=$1
   echo APP = ${HEROKU_APP_ID}
   echo rev = `git rev-parse ${TRAVIS_BRANCH}`
   git remote add heroku git@heroku.com:${HEROKU_APP_ID}.git
