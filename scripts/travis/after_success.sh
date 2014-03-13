@@ -14,5 +14,5 @@ if [[ "${TRAVIS_BRANCH}" == "heroku/production" || "${TRAVIS_BRANCH}" == "heroku
   echo "   StrictHostKeyChecking no" >> ~/.ssh/config
   echo "   CheckHostIP no" >> ~/.ssh/config
   echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
-  heroku config:set GITHUB_TO_LINGR_VERSION=`git rev-parse ${TRAVIS_BRANCH}` --app ${HEROKU_APP_ID}
+  heroku config:set --app ${HEROKU_APP_ID} GITHUB_TO_LINGR_VERSION=`git rev-parse ${TRAVIS_BRANCH}` 
 fi
