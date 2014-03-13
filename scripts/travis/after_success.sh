@@ -9,6 +9,8 @@ if [[ "${TRAVIS_BRANCH}" == "heroku/production" || "${TRAVIS_BRANCH}" == "heroku
   if [ "${TRAVIS_BRANCH}" == "heroku/development"  ]; then
     export HEROKU_APP_ID=${HEROKU_APP_ID_DEVELOPMENT}
   fi
+  echo APP = ${HEROKU_APP_ID}
+  echo rev = `git rev-parse ${TRAVIS_BRANCH}`
   git remote add heroku git@heroku.com:${HEROKU_APP_ID}.git
   echo "Host heroku.com" >> ~/.ssh/config
   echo "   StrictHostKeyChecking no" >> ~/.ssh/config
