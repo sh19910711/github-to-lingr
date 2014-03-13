@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ "${TRAVIS_BRANCH}" == "heroku/production" ] || [ "${TRAVIS_BRANCH}" == "heroku/development" ]]; then
   wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
