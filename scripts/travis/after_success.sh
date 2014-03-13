@@ -2,7 +2,13 @@
 
 if [[ "${TRAVIS_BRANCH}" == "heroku/production" || "${TRAVIS_BRANCH}" == "heroku/development" ]]; then
   wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-  export HEROKU_APP_ID=${HEROKU_APP_ID_PRODUCTION}
+  HEROKU_APP_ID=""
+  if [ "${TRAVIS_BRANCH}" == "heroku/production"  ]; then
+    HEROKU_APP_ID=${HEROKU_APP_ID_PRODUCTION}
+  fi
+  if [ "${TRAVIS_BRANCH}" == "heroku/development"  ]; then
+    HEROKU_APP_ID=${HEROKU_APP_ID_DEVELOPMENT}
+  fi
   git remote add heroku git@heroku.com:${HEROKU_APP_ID}.git
   echo "Host heroku.com" >> ~/.ssh/config
   echo "   StrictHostKeyChecking no" >> ~/.ssh/config
