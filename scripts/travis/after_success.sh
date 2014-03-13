@@ -10,5 +10,5 @@ if [[ "${TRAVIS_PULL_REQUEST}" == false ]] && [[ "${TRAVIS_BRANCH}" == "heroku/p
   echo "   StrictHostKeyChecking no" >> ~/.ssh/config
   echo "   CheckHostIP no" >> ~/.ssh/config
   echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
-  heroku config:set GITHUB_TO_LINGR_VERSION="`git rev-parse ${TRAVIS_BRANCH}`" --app ${HEROKU_APP_ID}
+  heroku config:set GITHUB_TO_LINGR_VERSION=${TRAVIS_COMMIT} --app ${HEROKU_APP_ID}
 fi
