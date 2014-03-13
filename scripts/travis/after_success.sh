@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if [[ "${TRAVIS_BRANCH}" == "heroku/production" ] || [ "${TRAVIS_BRANCH}" == "heroku/development" ]]; then
+if [[ "${TRAVIS_BRANCH}" == "heroku/production" ]] || [[ "${TRAVIS_BRANCH}" == "heroku/development" ]]; then
   wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-  if [ "${TRAVIS_BRANCH}" == "heroku/production" ]; then
+  if [[ "${TRAVIS_BRANCH}" == "heroku/production" ]]; then
     git remote add heroku git@heroku.com:${HEROKU_APP_ID_PRODUCTION}.git
   fi
-  if [ "${TRAVIS_BRANCH}" == "heroku/development" ]; then
+  if [[ "${TRAVIS_BRANCH}" == "heroku/development" ]]; then
     git remote add heroku git@heroku.com:${HEROKU_APP_ID_DEVELOPMENT}.git
   fi
   echo "Host heroku.com" >> ~/.ssh/config
