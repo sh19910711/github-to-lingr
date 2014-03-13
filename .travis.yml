@@ -21,8 +21,8 @@ after_success:
   - if [ "${TRAVIS_PULL_REQUEST}" == false ] && [ "${TRAVIS_BRANCH}" == "heroku/development" ]; then bash scripts/travis/after_success.sh ${HEROKU_APP_ID_DEVELOPMENT} ; fi
 gemfile:
   - Gemfile
-global:
-  env:
+env:
+  global:
     secure: "cz/XakXwNuSsvGkVhV14g8RwOkvNG4ohncFM7cycEYTiCasmMjfEMxoy/i6iFPBim96RWXA2EF0KRIdbA4SVn5FCdcw2A4Rs7WZ34+6KqQCUiHW1/hRbwYn9cD5rN38h3hSod28QPqXlEG38Fr362W5tk+iF9ntPcfFb9wuwU7Q="
     secure: "AL7IxoLSK45BGadDKESUHqPpSySOSrOm9sjUFdvoakd2qzEBaV/6hvzGmEjXopI6HGtjR31oukyXCX3pHNvU93Iw+fW0+PDduEqEr+OrD0HpTnIacbg5Aik0H39ThRqA4qhPWRYcb0+8XqvRy9nCJqKl3MEJdPVbip4ibueqBY8="
 deploy:
