@@ -1,8 +1,7 @@
 #!/bin/bash
 
-if [[ "${TRAVIS_BRANCH}" == "heroku/production" || "${TRAVIS_BRANCH}" == "heroku/development" ]]; then
+if [[ "${TRAVIS_PULL_REQUEST}" == false ]] && [[ "${TRAVIS_BRANCH}" == "heroku/production" || "${TRAVIS_BRANCH}" == "heroku/development" ]]; then
   wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-  export HEROKU_APP_ID=""
   if [ "${TRAVIS_BRANCH}" == "heroku/production"  ]; then
     export HEROKU_APP_ID=${HEROKU_APP_ID_PRODUCTION}
   fi
