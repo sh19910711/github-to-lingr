@@ -23,8 +23,7 @@ deploy:
   api_key:
     secure: "Org0wg805+PPwdseZXee8umOCiQwyVwHz/0cl1V7qkx8oNqNX7e7CHlXb5WrEB8RozGhoUHVHM7bupyDGyA+4mqUcngoNVdsGyS0VrQ553zKKFySspWiW4l07HamfBZ6G3CZeJfC+El9frD1DyWh0P4q7DsNaC1BMigetfPKn7A="
   run:
-    - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-    - heroku config:set GITHUB_TO_LINGR_VERSION=${TRAVIS_COMMIT} --app 
+    - export GITHUB_TO_LINGR_VERSION=${TRAVIS_COMMIT}
   app:
     heroku/production:
       secure: "MEojp0bR2I9msoCfmqYGJ75pgOxKaEYsW6X4iLDDsBne6+hq01Yra1KsYznEl985FCDRsgEFGwGpdBQazceyyyZJqTOrX+8Ip3Y15DfDq9YS2i+kcHrd68m+4dfW6kJ+HFklnnW75gGPYGkaOjeP1lhqLh5x0JUuM/BaRYa30G4="
