@@ -50,6 +50,17 @@ describe 'Server' do
         :body => response_body,
       },
     )
+    response_body = File.read(File.dirname(__FILE__) + '/mock/user.json')
+    WebMock.stub_request(:get, 'https://api.github.com/user').to_return(
+      {
+        :status => 200,
+        :headers => {
+          'Content-Type' => 'application/json',
+          'Content-Length' => response_body.length,
+        },
+        :body => response_body,
+      }
+    )
   end
 
   # サーバーアプリ

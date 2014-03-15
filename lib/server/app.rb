@@ -263,8 +263,11 @@ module Server
         return
       end
 
+      user_name = nil
+
       begin
         client = Octokit::Client.new(:access_token => user['access_token'])
+        user_name = client.user.name
         events = client.user_public_events(user['username'])
       rescue => error
         # 不正なアクセストークンを削除する
@@ -300,6 +303,7 @@ module Server
       if all_commits.length > 0
         lingr.say "### " + user['username'] + " が " + all_commits.length.to_s + " 個コミット ###\n"
         all_commits.each {|commit_info|
+          next unless commit_info['commit']['author']['name'] == user_name
           url = 'https://github.com/' + commit_info['repo']['name'] + '/commit/' + commit_info['commit']['sha']
           commit_message = "[" + commit_info['repo']['name'] + "] " + commit_info['commit']['message'] + "\n" + url + "\n"
           lingr.say commit_message
